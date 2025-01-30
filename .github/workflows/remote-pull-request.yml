@@ -14,36 +14,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Generate branch name
+        id: generate_branch
+        run: echo "branch=release-${{ github.event.client_payload.release.tag_name }}" >> $GITHUB_ENV
+        
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: '${{ env.branch }}'
 
-      - name: Generate branch name
-        id: generate_branch
-        run: echo "branch=release-${{ github.event.client_payload.release.tag_name }}" >> $GITHUB_ENV
-
-      #- name: Create Pull Request
-      #  id: cpr
-      #  uses: peter-evans/create-pull-request@v7
-      #  with:
-      #    token: ${{ secrets.GITHUB_TOKEN }}
-      #    commit-message: Create pull request
-      #    committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-      #    author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-      #    signoff: false
-      #    branch: ${{ env.branch }}
-      #    delete-branch: false
-      #    base: main
-      #    title: 'Automatic Release - ${{ github.event.client_payload.release.tag_name }}'
-      #    body: |
-      #      This is an automated pull request generating a new electronic datasheets standard release.
-      #     
-      #      Release Notes:
-      #      ${{ github.event.client_payload.release.body }}
-      #    labels: |
-      #      release
-      #      automated pr
-      #    draft: false
-      #    watchers: |
-      #      ${{ github.actor }}
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Create pull request
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          signoff: false
+          branch: ${{ env.branch }}
+          delete-branch: false
+          base: main
+          title: 'Automatic Release - ${{ github.event.client_payload.release.tag_name }}'
+          body: |
+            This is an automated pull request generating a new electronic datasheets standard release.
+           
+            Release Notes:
+            ${{ github.event.client_payload.release.body }}
+          labels: |
+            release
+            automated pr
+          draft: false          
