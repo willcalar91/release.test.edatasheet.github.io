@@ -32,6 +32,5 @@ jobs:
             --base main \
             --head ${{ env.branch }} \
             --label "release,automated pr" \
-            --draft false
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
