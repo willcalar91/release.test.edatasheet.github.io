@@ -27,7 +27,7 @@ jobs:
       - name: Fetch release notes from another repository
         id: fetch_release_notes
         run: |
-          release_info=$(curl -s -H "Authorization: token ${{ secrets.PAT }}" \
+          release_info=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             https://github.com/edatasheets/edatasheets/releases/tags/${{ github.event.client_payload.release.tag_name }})
           release_body=$(echo "$release_info" | jq -r .body)
           echo "RELEASE_BODY=$release_body" >> $GITHUB_ENV
