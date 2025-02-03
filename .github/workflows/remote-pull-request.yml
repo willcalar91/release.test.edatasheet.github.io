@@ -28,7 +28,7 @@ jobs:
         run: |
           gh pr create \
             --title "Automatic Release - ${{ github.event.client_payload.release.tag_name }}" \
-            --body "$(echo -e "This is an automated pull request generating a new electronic datasheets standard release.\n\n[Release Notes](https://github.com/${{ github.repository }}/releases/tag/${{github.event.client_payload.release.tag_name }})")" \
+            --body "$(echo -e "This is an automated pull request generating a new electronic datasheets standard release.\n\n[Release Notes](https://github.com/edatasheets/edatasheets/releases/tag/${{github.event.client_payload.release.tag_name }})")" \
             --base main \
             --head ${{ env.branch }}
         env:
