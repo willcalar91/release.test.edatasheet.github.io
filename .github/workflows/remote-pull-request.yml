@@ -24,12 +24,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: '${{ env.branch }}'
 
+      - name: Fetch release notes from another repository
+        id: fetch_release_notes
+        run: |
+          release_info=$(curl -s -H "Authorization: token ${{ secrets.PAT }}" \
+            https://api.github.com/repos/another-repo/another-project/releases/tags/${{ github.event.client_payload.release.tag_name }})
+          release_body=$(echo "$release_info" | jq -r .body)
+          echo "RELEASE_BODY=$release_body" >> $GITHUB_ENV
+
       - name: Create Pull Request
         run: |
           gh pr create \
             --title "Automatic Release - ${{ github.event.client_payload.release.tag_name }}" \
-            --body "This is an automated pull request generating a new electronic datasheets standard release.\n\nRelease Notes:\n${{ github.event.client_payload.release.body }}" \
+            --body "This is an automated pull request generating a new electronic datasheets standard release.\n\nRelease Notes:\n${{ env.RELEASE_BODY }}" \
             --base main \
-            --head ${{ env.branch }} \
+            --head ${{ env.branch }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
